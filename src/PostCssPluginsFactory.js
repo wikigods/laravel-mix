@@ -18,10 +18,23 @@ module.exports = class PostCssPluginsFactory {
     load(plugins = []) {
         this.loadGlobalPlugins();
         this.loadLocalPlugins(plugins);
+        this.loadConfigFile();
         this.loadAutoprefixer();
         this.loadCssNano();
 
-        return this.plugins;
+        const pluginNames = new Set();
+
+        return this.plugins.filter(plugin => {
+            const name = plugin.postcssPlugin || plugin.name;
+
+            if (pluginNames.has(name)) {
+                return false;
+            }
+
+            pluginNames.add(name);
+
+            return true;
+        });
     }
 
     /**

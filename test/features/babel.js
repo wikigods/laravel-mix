@@ -22,7 +22,7 @@ test.serial('Default Babel plugins/presets are set', async t => {
 
     await webpack.compile();
 
-    t.true(babelConfig.hasPlugin('@babel/plugin-proposal-object-rest-spread'));
+    t.true(babelConfig.hasPlugin('@babel/plugin-transform-object-rest-spread'));
     t.true(babelConfig.hasPreset('@babel/preset-env'));
 });
 
@@ -115,6 +115,6 @@ test.serial('Babel config from Mix extensions is merged with the defaults', asyn
 
     await webpack.compile();
 
-    t.true(babelConfig.hasPlugin('@babel/plugin-proposal-object-rest-spread'));
+    t.true(babelConfig.hasPlugin('@babel/plugin-transform-object-rest-spread'));
     t.true(babelConfig.hasPlugin('@babel/plugin-proposal-unicode-property-regex'));
 });

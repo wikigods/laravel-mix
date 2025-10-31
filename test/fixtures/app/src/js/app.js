@@ -1,4 +1,4 @@
-import Vue from 'vue2';
+import * as Vue from 'vue';
 new Vue({ el: '#app' });
 alert('stub');
 // @ts-ignore

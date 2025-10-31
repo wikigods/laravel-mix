@@ -11,6 +11,7 @@ export async function compile(configOrPromise) {
     return new Promise((resolve, reject) => {
         compiler.run((err, stats) => {
             if (err) {
+                console.error(err);
                 reject(
                     Object.create(err, {
                         config: { value: config },
@@ -24,6 +25,7 @@ export async function compile(configOrPromise) {
                     (errors || []).map(error => error.message).join('\n')
                 );
 
+                console.error(errors);
                 reject(
                     Object.create(err, {
                         config: { value: config },

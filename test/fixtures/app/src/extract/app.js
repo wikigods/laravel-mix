@@ -1,5 +1,5 @@
 import 'core-js';
-import Vue from 'vue2';
+import * as Vue from 'vue';
 import { uniq } from 'lodash';
 import { auto } from 'eol';
 

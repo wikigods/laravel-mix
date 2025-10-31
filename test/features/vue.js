@@ -7,13 +7,12 @@ import { pathToFileURL } from 'url';
 import { context } from '../helpers/test.js';
 
 /**
- * @param {string|number} version
  * @param {import('../../src/Mix.js')} Mix
  */
-export function setupVueAliases(version, Mix) {
-    const vueModule = version === 3 ? 'vue3/dist/vue.cjs.js' : 'vue2/dist/vue.common.js';
-    const vueCompiler = version === 3 ? '@vue/compiler-dom' : 'vue-template-compiler';
-    const vueLoaderModule = version === 3 ? 'vue-loader16' : 'vue-loader15';
+export function setupVueAliases(Mix) {
+    const vueModule = 'vue3/dist/vue.cjs.js';
+    const vueCompiler = '@vue/compiler-dom';
+    const vueLoaderModule = 'vue-loader16';
 
     Mix.resolver.alias('vue', vueModule);
     Mix.resolver.alias('vue-loader', vueLoaderModule);
@@ -35,18 +34,14 @@ export function setupVueTests({ version, dir }) {
     /** @type {any} */
     let compiler;
 
-    let runtimeAliasPath =
-        version === 2
-            ? 'vue/dist/vue.runtime.esm.js'
-            : 'vue/dist/vue.runtime.esm-bundler.js';
-    let normalAliasPath =
-        version === 2 ? 'vue/dist/vue.esm.js' : 'vue/dist/vue.esm-bundler.js';
-    let compilerName = version === 2 ? 'vue-template-compiler' : '@vue/compiler-sfc';
+    let runtimeAliasPath = 'vue/dist/vue.runtime.esm-bundler.js';
+    let normalAliasPath = 'vue/dist/vue.esm-bundler.js';
+    let compilerName = '@vue/compiler-sfc';
 
     test.beforeEach(async t => {
         const { mix, Mix } = context(t);
 
-        await setupVueAliases(version, Mix);
+        await setupVueAliases(Mix);
         mix.options({ processCssUrls: false });
 
         compiler = await compilerSpy(Mix);
@@ -395,12 +390,6 @@ export function setupVueTests({ version, dir }) {
     test.serial('References to feature flags are replaced', async t => {
         const { assert, mix, webpack } = context(t);
 
-        if (version !== 3) {
-            t.pass.skip('Skipping for vue 2');
-
-            return;
-        }
-
         mix.vue();
         mix.js(`test/fixtures/app/src/${dir}/app-with-vue-and-css.js`, 'js/app.js');
 
@@ -417,12 +406,6 @@ export function setupVueTests({ version, dir }) {
     test.serial('The default Vue feature flags can be overridden', async t => {
         const { assert, mix, webpack } = context(t);
 
-        if (version !== 3) {
-            t.pass.skip('Skipping for vue 2');
-
-            return;
-        }
-
         mix.vue();
         mix.js(`test/fixtures/app/src/${dir}/app-with-vue-and-css.js`, 'js/app.js');
         mix.define({
@@ -437,89 +420,6 @@ export function setupVueTests({ version, dir }) {
             .contains(['false ? 0 : _vue_shared__']);
     });
 
-    test.serial(
-        'File loader has esModule disabled for Vue 2 and is not broken by custom loader rules',
-        async t => {
-            const { assert, mix, webpack } = context(t);
-
-            if (version === 3) {
-                t.pass.skip('Skipping for vue 3');
-
-                return;
-            }
-
-            // Using an extension so it modifies the rules before Vue processes them
-            mix.extend('foo', {
-                webpackRules() {
-                    return [
-                        {
-                            test: /\.something1$/,
-                            loader: 'css-loader'
-                        },
-                        {
-                            test: /\.something2$/,
-                            use: 'css-loader'
-                        },
-                        {
-                            test: /\.something3$/,
-                            use: ['css-loader']
-                        },
-                        {
-                            test: /\.something3$/,
-                            use: [{ ident: 'foobar' }]
-                        }
-                    ];
-                }
-            });
-
-            // @ts-ignore
-            mix.foo();
-
-            mix.options({ assetModules: false });
-            mix.vue();
-            mix.js(`test/fixtures/app/src/${dir}/app-with-vue-and-css.js`, 'js/app.js');
-
-            const config = await webpack.buildConfig();
-            const spy = sinon.spy();
-
-            // TODO: This is basically a copy of the module code in the Vue.js file
-            // That's not so great…
-            for (const rule of (config.module && config.module.rules) || []) {
-                if (typeof rule !== 'object') {
-                    continue;
-                }
-
-                let loaders = (rule && rule.use) || [];
-
-                if (!Array.isArray(loaders)) {
-                    continue;
-                }
-
-                for (const loader of loaders) {
-                    if (typeof loader !== 'object') {
-                        continue;
-                    }
-
-                    // TODO: This isn't the best check
-                    // We should check that the loader itself is correct
-                    // Not that file-loader is anywhere in it's absolute path
-                    // As this can produce false positives
-                    if (
-                        loader.loader &&
-                        loader.loader.includes('file-loader') &&
-                        loader.options
-                    ) {
-                        spy();
-
-                        // @ts-ignore
-                        t.falsy(loader.options.esModule);
-                    }
-                }
-            }
-
-            t.true(spy.called);
-        }
-    );
 }
 
 async function compilerSpy(Mix) {

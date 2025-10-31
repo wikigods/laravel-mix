@@ -29,7 +29,7 @@ module.exports = function (mix) {
         plugins: [],
 
         resolve: {
-            extensions: ['*', '.wasm', '.mjs', '.js', '.jsx', '.json'],
+            extensions: ['.*', '.wasm', '.mjs', '.js', '.jsx', '.json'],
             roots: [path.resolve(mix.config.publicPath)]
         },
 

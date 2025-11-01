@@ -12,7 +12,7 @@ import { context } from '../helpers/test.js';
 export function setupVueAliases(Mix) {
     const vueModule = 'vue3/dist/vue.cjs.js';
     const vueCompiler = '@vue/compiler-dom';
-    const vueLoaderModule = 'vue-loader16';
+    const vueLoaderModule = 'vue-loader';
 
     Mix.resolver.alias('vue', vueModule);
     Mix.resolver.alias('vue-loader', vueLoaderModule);

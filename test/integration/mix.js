@@ -58,106 +58,106 @@ test.serial.afterEach.always(async t => {
     }
 });
 
-// test.serial.beforeEach(t => {
-//     /** @type {TestContext<TestContextMetadata>} */
-//     const { mix, metadata } = context(t);
+test.serial.beforeEach(t => {
+    /** @type {TestContext<TestContextMetadata>} */
+    const { mix, metadata } = context(t);
 
-//     metadata.logEvents = [];
-//     mix.setPublicPath('test/fixtures/integration/dist');
-// });
+    metadata.logEvents = [];
+    mix.setPublicPath('test/fixtures/integration/dist');
+});
 
-// test.serial.afterEach.always(t => {
-//     if (t.passed) {
-//         return;
-//     }
+test.serial.afterEach.always(t => {
+    if (t.passed) {
+        return;
+    }
 
-//     /** @type {TestContext<TestContextMetadata>} */
-//     const { metadata } = context(t);
+    /** @type {TestContext<TestContextMetadata>} */
+    const { metadata } = context(t);
 
-//     metadata.logEvents.forEach(log => console.log(log));
-// });
+    metadata.logEvents.forEach(log => console.log(log));
+});
 
-// test.serial('compiling just js', async t => {
-//     const { mix, Mix, webpack } = context(t);
+test.serial('compiling just js', async t => {
+    const { mix, Mix, webpack } = context(t);
 
-//     // Build a simple mix setup
-//     await setupVueAliases(3, Mix);
+    // Build a simple mix setup
+    await setupVueAliases(Mix);
 
-//     mix.js('test/fixtures/integration/src/js/app.js', 'js/app.js');
-//     mix.vue({ extractStyles: 'css/vue-styles.css' });
-//     mix.react();
-//     mix.extract();
+    mix.js('test/fixtures/integration/src/js/app.js', 'js/app.js');
+    mix.vue({ extractStyles: 'css/vue-styles.css' });
+    mix.react();
+    mix.extract();
 
-//     await webpack.compile();
-//     await assertProducesLogs(t, ['loaded: app.js']);
-// });
+    await webpack.compile();
+    await assertProducesLogs(t, ['loaded: app.js']);
+});
 
-// test.serial('compiling js and css together', async t => {
-//     const { mix, Mix, webpack } = context(t);
+test.serial('compiling js and css together', async t => {
+    const { mix, Mix, webpack } = context(t);
 
-//     await setupVueAliases(3, Mix);
+    await setupVueAliases(Mix);
 
-//     // Build a simple mix setup
-//     mix.js('test/fixtures/integration/src/js/app.js', 'js/app.js');
-//     mix.react();
-//     mix.sass('test/fixtures/integration/src/css/app.scss', 'css/app.css');
-//     mix.postCss('test/fixtures/integration/src/css/app.css', 'css/app.css');
-//     mix.vue({ extractStyles: 'css/vue-styles.css' });
-//     mix.extract();
+    // Build a simple mix setup
+    mix.js('test/fixtures/integration/src/js/app.js', 'js/app.js');
+    mix.react();
+    mix.sass('test/fixtures/integration/src/css/app.scss', 'css/app.css');
+    mix.postCss('test/fixtures/integration/src/css/app.css', 'css/app.css');
+    mix.vue({ extractStyles: 'css/vue-styles.css' });
+    mix.extract();
 
-//     await webpack.compile();
-//     await assertProducesLogs(t, [
-//         'loaded: app.js',
-//         'run: app.js',
-//         'loaded: dynamic.js',
-//         'run: dynamic.js',
-//         'style: rgb(255, 119, 0)',
-//         'style: rgb(119, 204, 51)',
-//         'async component style: rgb(255, 119, 0) rgb(255, 119, 0)'
-//     ]);
-// });
+    await webpack.compile();
+    await assertProducesLogs(t, [
+        'loaded: app.js',
+        'run: app.js',
+        'loaded: dynamic.js',
+        'run: dynamic.js',
+        'style: rgb(255, 119, 0)',
+        'style: rgb(119, 204, 51)',
+        'async component style: rgb(255, 119, 0) rgb(255, 119, 0)'
+    ]);
+});
 
-// test.serial('node browser polyfills: enabled', async t => {
-//     const { mix, Mix, webpack } = context(t);
+test.serial('node browser polyfills: enabled', async t => {
+    const { mix, Mix, webpack } = context(t);
 
-//     await setupVueAliases(3, Mix);
+    await setupVueAliases(Mix);
 
-//     mix.js('test/fixtures/integration/src/js/app.js', 'js/app.js');
-//     mix.vue({ extractStyles: 'css/vue-styles.css' });
-//     mix.react();
-//     mix.extract();
-//     mix.options({ legacyNodePolyfills: true });
+    mix.js('test/fixtures/integration/src/js/app.js', 'js/app.js');
+    mix.vue({ extractStyles: 'css/vue-styles.css' });
+    mix.react();
+    mix.extract();
+    mix.options({ legacyNodePolyfills: true });
 
-//     await webpack.compile();
-//     await assertProducesLogs(t, [
-//         'node-polyfill: Buffer function',
-//         'node-polyfill: Buffer.from function',
-//         'node-polyfill: process object',
-//         'node-polyfill: process.env object',
-//         'node-polyfill: process.env.NODE_ENV string = test'
-//     ]);
-// });
+    await webpack.compile();
+    await assertProducesLogs(t, [
+        'node-polyfill: Buffer function',
+        'node-polyfill: Buffer.from function',
+        'node-polyfill: process object',
+        'node-polyfill: process.env object',
+        'node-polyfill: process.env.NODE_ENV string = test'
+    ]);
+});
 
-// test.serial('node browser polyfills: disabled', async t => {
-//     const { mix, Mix, webpack } = context(t);
+test.serial('node browser polyfills: disabled', async t => {
+    const { mix, Mix, webpack } = context(t);
 
-//     await setupVueAliases(3, Mix);
+    await setupVueAliases(Mix);
 
-//     mix.js('test/fixtures/integration/src/js/app.js', 'js/app.js');
-//     mix.vue({ extractStyles: 'css/vue-styles.css' });
-//     mix.react();
-//     mix.extract();
-//     mix.options({ legacyNodePolyfills: false });
+    mix.js('test/fixtures/integration/src/js/app.js', 'js/app.js');
+    mix.vue({ extractStyles: 'css/vue-styles.css' });
+    mix.react();
+    mix.extract();
+    mix.options({ legacyNodePolyfills: false });
 
-//     await webpack.compile();
-//     await assertProducesLogs(t, [
-//         'node-polyfill: Buffer undefined',
-//         'node-polyfill: Buffer.from undefined',
-//         'node-polyfill: process undefined',
-//         'node-polyfill: process.env undefined',
-//         'node-polyfill: process.env.NODE_ENV string = test'
-//     ]);
-// });
+    await webpack.compile();
+    await assertProducesLogs(t, [
+        'node-polyfill: Buffer undefined',
+        'node-polyfill: Buffer.from undefined',
+        'node-polyfill: process undefined',
+        'node-polyfill: process.env undefined',
+        'node-polyfill: process.env.NODE_ENV string = test'
+    ]);
+});
 
 /**
  * @param {import('ava').ExecutionContext} t

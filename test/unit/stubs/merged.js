@@ -1,1 +1,2 @@
-alert('fake minified output')
+class Foo {}
+class Bar {}

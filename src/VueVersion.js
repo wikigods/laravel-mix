@@ -13,7 +13,7 @@ class VueVersion {
      * @returns {number[]}
      */
     supported() {
-        return [2, 3];
+        return [3];
     }
 
     /**
